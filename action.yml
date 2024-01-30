@@ -59,11 +59,14 @@ runs:
           modificationTime = pr.updated_at;
           if ('${{ inputs.ignore-non-push-updates }}' === 'true') {
             const prEvents = pushEvents.filter(event => event.payload.ref === 'refs/heads/' + pr.head.ref);
+            console.log(`prEvents: ${JSON.stringify(prEvents, undefined, 3)}`);
             lastPushEvent = prEvents.filter(event => event.payload.head === pr.head.sha);
+            console.log(`lastPushEvent: ${JSON.stringify(lastPushEvent, undefined, 3)}`);
             if (lastPushEvent.length < 1) {
                 console.log(`No push events found for PR #${pr.number}.`);
             } else {
                 console.log(`Found ${lastPushEvent.length} push events for PR #${pr.number}.`)
+                console.log(`lastPushEvent: ${JSON.stringify(lastPushEvent, undefined, 3)}`);
                 lastPushEvent.sort(function(a,b){return new Date(b.created_at) - new Date(a.created_at)});
                 modificationTime = lastPushEvent[0].created_at;
                 console.log(`Using last push event ${modificationTime} for PR #${pr.number}.`);
